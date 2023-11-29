@@ -1,5 +1,4 @@
 #8==========> :)))))) 
-#imBoutaCuuuuuum
 #plzDontReadThis
 #i totally licensed this so if you copy i will cut your nuts
 
@@ -20,10 +19,10 @@ spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
       securityContext:
-        fsgroup: 1000
-        runAsGroup: 1000
+        fsgroup: 1000 #check what this does
+        runAsGroup: 1000 #check what this does
         runAsNonRoot: true
-        runAsUser: 1000
+        runAsUser: 1000 #check what this does
       containers:
       -name: server
         securityContext:
@@ -39,13 +38,27 @@ spec:
         env:
         - name: PORT
           value: "8080"
-        - name: DISABLE_PROFILER
+        - name: DISABLE_PROFILER #check what this does
           value: "1"
         readinessProbe:
           periodSeconds: 5
-          grpc:
+          grpc: 
             port: 8080
         livenessProbe:
           periodSeconds: 5
           grpc:
             port: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team1
+spec:
+  type: ClusterIP
+  selector:
+    app: team1
+  ports:
+  -name: grpc
+    port: 5000
+    targetport: 8080
+---
