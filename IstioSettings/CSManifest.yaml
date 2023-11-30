@@ -2,29 +2,30 @@
 #plzDontReadThis
 #i totally licensed this so if you copy i will cut your nuts
 
----
+--- ########################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: team1
-spec: 
+  name: service01
+  namespace: team1
+spec:
   selector:
     matchLabels:
-      app: team1
+      app: service01
   template:
     metadata:
       labels:
-        apps: team1
+        app: service01
     spec:
       serviceAccountName: default
       terminationGracePeriodSeconds: 5
       securityContext:
-        fsgroup: 1000 #check what this does
-        runAsGroup: 1000 #check what this does
+        fsGroup: 1000
+        runAsGroup: 1000
         runAsNonRoot: true
-        runAsUser: 1000 #check what this does
+        runAsUser: 1000
       containers:
-      -name: server
+      - name: server
         securityContext:
           allowPrivilegeEscalation: false
           capabilities:
@@ -32,22 +33,32 @@ spec:
               - ALL
           privileged: false
           readOnlyRootFilesystem: true
-        image: "INSERT IMAGE LINK HERE"
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
         ports:
-        - containerPort: 8080
+        - containerPort: 80
         env:
         - name: PORT
-          value: "8080"
-        - name: DISABLE_PROFILER #check what this does
+          value: "80"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
           value: "1"
         readinessProbe:
           periodSeconds: 5
-          grpc: 
-            port: 8080
+          grpc:
+            port: 80
         livenessProbe:
           periodSeconds: 5
           grpc:
-            port: 8080
+            port: 80
+        env:
+        - name: PORT
+          value: "80"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
 ---
 apiVersion: v1
 kind: Service
@@ -56,9 +67,1199 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    app: team1
+    app: service01
   ports:
-  -name: grpc
+  - name: grpc
     port: 5000
-    targetport: 8080
+    targetPort: 80
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service02
+  namespace: team1
+spec:
+  selector:
+    matchLabels:
+      app: service02
+  template:
+    metadata:
+      labels:
+        app: service02
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "8080"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        env:
+        - name: PORT
+          value: "80"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
 ---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team1
+spec:
+  type: ClusterIP
+  selector:
+    app: service02
+  ports:
+  - name: grpc
+    port: 5000
+    targetPort: 80
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service02
+  namespace: team2
+spec:
+  selector:
+    matchLabels:
+      app: service02
+  template:
+    metadata:
+      labels:
+        app: service02
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        env:
+        - name: PORT
+          value: "80"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team2
+spec:
+  type: ClusterIP
+  selector:
+    app: service02
+  ports:
+  - name: grpc
+    port: 5001
+    targetPort: 80
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service03
+  namespace: team2
+spec:
+  selector:
+    matchLabels:
+      app: service03
+  template:
+    metadata:
+      labels:
+        app: service03
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "8080"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        env:
+        - name: PORT
+          value: "80"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team2
+spec:
+  type: ClusterIP
+  selector:
+    app: service03
+  ports:
+  - name: grpc
+    port: 5001
+    targetPort: 80
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: connection-security-redis
+  namespace: team3
+spec:
+  selector:
+    matchLabels:
+      app: connection-security-redis
+  template:
+    metadata:
+      labels:
+        app: connection-security-redis
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 6379
+        env:
+        - name: PORT
+          value: "6379"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 6379
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 6379
+        env:
+        - name: PORT
+          value: "6379"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team3
+spec:
+  type: ClusterIP
+  selector:
+    app: connection-security-redis
+  ports:
+  - name: grpc
+    port: 5002
+    targetPort: 6379
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: connection-security-redis-headless
+  namespace: team3
+spec:
+  selector:
+    matchLabels:
+      app: connection-security-redis-headless
+  template:
+    metadata:
+      labels:
+        app: connection-security-redis-headless
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 6379
+        env:
+        - name: PORT
+          value: "6379"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 6379
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 6379
+        env:
+        - name: PORT
+          value: "6379"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team3
+spec:
+  type: ClusterIP
+  selector:
+    app: connection-security-redis-headless
+  ports:
+  - name: grpc
+    port: 5002
+    targetPort: 6379
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: two-factor
+  namespace: team3
+spec:
+  selector:
+    matchLabels:
+      app: two-factor
+  template:
+    metadata:
+      labels:
+        app: two-factor
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 8000
+        env:
+        - name: PORT
+          value: "8000"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 8000
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 8000
+        env:
+        - name: PORT
+          value: "8000"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team3
+spec:
+  type: ClusterIP
+  selector:
+    app: two-factor
+  ports:
+  - name: grpc
+    port: 5003
+    targetPort: 8000
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes-07
+  namespace: team4
+spec:
+  selector:
+    matchLabels:
+      app: hello-kubernetes-07
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes-07
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 8080
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team4
+spec:
+  type: ClusterIP
+  selector:
+    app: hello-kubernetes-07
+  ports:
+  - name: grpc
+    port: 5004
+    targetPort: 8080
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hello-kubernetes-08
+  namespace: team4
+spec:
+  selector:
+    matchLabels:
+      app: hello-kubernetes-08
+  template:
+    metadata:
+      labels:
+        app: hello-kubernetes-08
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 8080
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 8080
+        env:
+        - name: PORT
+          value: "8080"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team4
+spec:
+  type: ClusterIP
+  selector:
+    app: hello-kubernetes-08
+  ports:
+  - name: grpc
+    port: 5004
+    targetPort: 80
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service05
+  namespace: team4
+spec:
+  selector:
+    matchLabels:
+      app: service05
+  template:
+    metadata:
+      labels:
+        app: service05
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        env:
+        - name: PORT
+          value: "80"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: team4
+spec:
+  type: ClusterIP
+  selector:
+    app: service05
+  ports:
+  - name: grpc
+    port: 5004
+    targetPort: 80
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service09
+  namespace: team4
+spec:
+  selector:
+    matchLabels:
+      app: service09
+  template:
+    metadata:
+      labels:
+        app: service09
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        env:
+        - name: PORT
+          value: "80"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: team4
+spec:
+  type: ClusterIP
+  selector:
+    app: service09
+  ports:
+  - name: grpc
+    port: 5004
+    targetPort: 80
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  namespace: team5
+spec:
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 27017
+        env:
+        - name: PORT
+          value: "27017"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 27017
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 27017
+        env:
+        - name: PORT
+          value: "27017"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: team5
+spec:
+  type: ClusterIP
+  selector:
+    app: db
+  ports:
+  - name: grpc
+    port: 5005
+    targetPort: 27017
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: media-acquisition
+  namespace: team5
+spec:
+  selector:
+    matchLabels:
+      app: media-acquisition
+  template:
+    metadata:
+      labels:
+        app: media-acquisition
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 5050
+        env:
+        - name: PORT
+          value: "5050"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 5050
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 5050
+        env:
+        - name: PORT
+          value: "5050"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: team5
+spec:
+  type: ClusterIP
+  selector:
+    app: media-acquisition
+  ports:
+  - name: grpc
+    port: 5005
+    targetPort: 5050
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: argo-rollouts-metrics
+  namespace: team7
+spec:
+  selector:
+    matchLabels:
+      app: argo-rollouts-metrics
+  template:
+    metadata:
+      labels:
+        app: argo-rollouts-metrics
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 8090
+        env:
+        - name: PORT
+          value: "8090"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 8090
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 8090
+        env:
+        - name: PORT
+          value: "8090"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: team7
+spec:
+  type: ClusterIP
+  selector:
+    app: argo-rollouts-metrics
+  ports:
+  - name: grpc
+    port: 5007
+    targetPort: 8090
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitlab-runner
+  namespace: team7
+spec:
+  selector:
+    matchLabels:
+      app: gitlab-runner
+  template:
+    metadata:
+      labels:
+        app: gitlab-runner
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 9252
+        env:
+        - name: PORT
+          value: "9252"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 9252
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 9252
+        env:
+        - name: PORT
+          value: "9252"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: team7
+spec:
+  type: ClusterIP
+  selector:
+    app: gitlab-runner
+  ports:
+  - name: grpc
+    port: 5007
+    targetPort: 9252
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: testapplication
+  namespace: team7
+spec:
+  selector:
+    matchLabels:
+      app: testapplication
+  template:
+    metadata:
+      labels:
+        app: testapplication
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        env:
+        - name: PORT
+          value: "80"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: team7
+spec:
+  type: ClusterIP
+  selector:
+    app: testapplication
+  ports:
+  - name: grpc
+    port: 5007
+    targetPort: 80
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service03
+  namespace: team8
+spec:
+  selector:
+    matchLabels:
+      app: service03
+  template:
+    metadata:
+      labels:
+        app: service03
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        env:
+        - name: PORT
+          value: "80"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: team8
+spec:
+  type: ClusterIP
+  selector:
+    app: service03
+  ports:
+  - name: grpc
+    port: 5008
+    targetPort: 80
+--- ########################################################
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service03
+  namespace: team9
+spec:
+  selector:
+    matchLabels:
+      app: service09
+  template:
+    metadata:
+      labels:
+        app: service09
+    spec:
+      serviceAccountName: default
+      terminationGracePeriodSeconds: 5
+      securityContext:
+        fsGroup: 1000
+        runAsGroup: 1000
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+      - name: server
+        securityContext:
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+              - ALL
+          privileged: false
+          readOnlyRootFilesystem: true
+        image: gcr.io/google-samples/microservices-demo/emailservice:v0.8.1 #insert correct image
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+        - name: DISABLE_PROFILER #Turn on if performance metrics are wanted
+          value: "1"
+        readinessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        livenessProbe:
+          periodSeconds: 5
+          grpc:
+            port: 80
+        env:
+        - name: PORT
+          value: "80"
+        #resources: Check if these are needed in the long run
+          #requests:
+            #cpu: 100m
+            #memory: 64Mi
+          #limits:
+            #cpu: 200m
+            #memory: 128Mi
+--- 
+apiVersion: v1 
+kind: Service
+metadata:
+  name: team9
+spec:
+  type: ClusterIP
+  selector:
+    app: service09
+  ports:
+  - name: grpc
+    port: 5009
+    targetPort: 80
+--- ########################################################
