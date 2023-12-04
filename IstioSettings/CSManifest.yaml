@@ -1,12 +1,62 @@
-#8==========> :)))))) 
-#plzDontReadThis
-#i totally licensed this so if you copy i will cut your nuts
+# MMMMMMMMMMMMMM>!!!>!!!>>>>>>!!!>!!!>MMMMMMMMMMMMMM
+# MMMMMMMMMMMM>!>!!!>>>>>>>>>>>>>>!!!>!>MMMMMMMMMMMM
+# MMMMMMMMMMM!!!!!>>>>>>>>>>>>>>>>>>!!!!!MMMMMMMMMMM
+# MMMMMMMMM>>>!!>>>>>>>>>>>>>>>>>>>>>>!!>>>MMMMMMMMM
+# MMMMMMMM>>>!>>>>>>>>>>>>>>>>>>>>>>>>>>!>>>MMMMMMMM
+# MMMMMMM>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MMMMMMM
+# MMMMMM>>!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!>>MMMMMM
+# MMMMM>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>MMMMM
+# MMMM?>!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>!>?MMMM
+# MMM:7>>>>>>>>>>>>>>>>>>>>>>>>C>>>>>>>>?7>>>>>7:MMM
+# MMM:!>>>>>>>>>>>>>>C7>>>>>>>>O?>>>>>>>?O7$>>>!:MMM
+# MM:!!>>>>>>>>>>>>>>$7>>>>>>>>QC>>>>>>>7$?O>>>!!:MM
+# M>!>>>>>>>>>>>>>>>?$>>>>>>>>>$$>>>>>>>7$?O>>>>>!>M
+# M!!>>>>>>>>>>>>7?OQC>>>>>>>>>7$Q?7>>>>>$OC>>>>>!!M
+# M>!>>>>>>>>>>C$QQQQ?>>>>7?>>>>CQQQ$C7>>C$>>>>>>!>M
+# >>!>>>>>>7C$QQQ$QQQQ7>>>OQ7>>OQ$$QQQQQO?7>>>>>>!>>
+# >!>>>>7O$QQQO?O7OQOQO>>>$QC>>?!$?OO?$OQQQ$OC7>>>!>
+# >!>>C$QQ$$$>;;$C777$O>>>QQ$>>!;OO??$?;;:CQ$$O>>>!>
+# >!>>77>>>$:...!$OO$?–>>>$O$>>>;;?OO7;...;C?>>>>>!>
+# !>>>>>>>C7.....–7?!;;>>>>>>>>>>..........:$>>>>>>!
+# >>>>>>>>$–..........–7>>CO>>>>O:;–:::!!:::$>>>>>>>
+# >>>>>>>>Q–.........;??>7QC>>>>?$$QQQQQQQQQQ7>>>>>>
+# !>>>>>>7Q–......;–7OO>>CQ7>>>>>$QQQQQQQQQQQ7>>>>>!
+# >>>>>>>>Q!....;!OQQ?>>>>?>>>>>>7$QQQQQQQQQQ>>>>>>>
+# >7>?>>>?QQC???$QQ$7>>>>>>>>>>>>>7QQQQQQQQQQ7>>>>>>
+# >7OO>>>7QQQQQQQQQ7>>>>>>>>>>>>>>>7?C$QQQQQO>>>>>>>
+# >>$O7>>>C$$$QOOO7>>>>>>COO$$$?>>>>>77?OC7?7>>>>>>>
+# !>$C?>>>>77777777>>>>7$7!!––!$7>>>>77777777>>>>>>!
+# >>CQ7>>>>>777777>>>>7O:......>$>>>>>7777777>>>>>>>
+# >>>>>>>>>>>7777>>>>>O–..;;;..;OC>>>>>77777>>>>>>>!
+# !>>>>>>>>>>>>>>>>>>O:;>CO$O?!;:$>>>>>>>>>>>>>>>>>!
+# !!>>>>>>>>>>>>>>>>7$;7QQQQQQQ7;Q7>>>>>>>>>>>>>>>!!
+# >!>>>>>>>>>>>>>>>>OQ7$QQQQQQQC!QC>>>>>>>>>>>>>>>>>
+# >!>>>>>>>>>>>>>>>>QQQQQQQQQQQQQQO>>>>>>>>>>>>>>>!>
+# >>>>>>>>>>>>>>>>>7QQQQQQQQQQQQQQ$>>>>>>>>>>>>>>>!>
+# M>>>>>>>>>>>>>>>>>QQQ$OCCQO?7C$Q$>>>>>>>>>>>>>>>>M
+# M7>>>>>>>>>>>>>>>>QQO7777$77777O$>>>>>>>>>>>>>>>7M
+# M$7!>>>>>>>>>>>>>>O$77777?77777OC>>>>>>>>>>>>>!7$M
+# MM>>!>>>>>>>>>>>>>7Q?777777777$Q>>>>>>>>>>>>>!>>MM
+# MMM!!>>>>>>>>>>>>>>7QC7777777O$7>>>>>>>>>>>>>!!MMM
+# MMM>>>>>>>>>>>>>>>>>?Q?77777?Q?>>>>>>>>>>>>>!>>MMM
+# MMMM>>>>>>>>>>>>>>>7$Q$77777$QO>>>>>>>>>>>>>>>MMMM
+# MMMMM>>>>>>>>>>>>>>>>?$$?7?$Q7>>>>>>>>>>>>>>>MMMMM
+# MMMMMM>!>>>>>>>>>>>>>>>OQQQO7>>>>>>>>>>>>>!>MMMMMM
+# MMMMMMM>>>>>>>>>>>>>>>>>>7>>>>>>>>>>>>>>>>>MMMMMMM
+# MMMMMMMM>>>!>>>>>>>>>>>>>>>>>>>>>>>>>>!>>>MMMMMMMM
+# MMMMMMMMM>!!!!>>>>>>>>>>>>>>>>>>>>>>!!!!>MMMMMMMMM
+# MMMMMMMMMMM!!>!!>>>>>>>>>>>>>>>>>>!!>!!MMMMMMMMMMM
+# MMMMMMMMMMMM>!!!>!!>>>>>>>>>>>>!!>!!!>MMMMMMMMMMMM
+# MMMMMMMMMMMMMMM!>!>!!!!>>>>!!!!>!>!MMMMMMMMMMMMMMM
+
+
+
 
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: service01
+  name: service01 #service01.team.svc.cluster.local
   namespace: team1
 spec:
   selector:
@@ -58,7 +108,7 @@ spec:
             #memory: 64Mi
           #limits:
             #cpu: 200m
-            #memory: 128Mi
+            #memory: 128Mi    
 ---
 apiVersion: v1
 kind: Service
@@ -72,6 +122,17 @@ spec:
   - name: grpc
     port: 5000
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: service01
+  namespace: team1
+spec:
+  host: service01.team1.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -142,6 +203,17 @@ spec:
   - name: grpc
     port: 5000
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: service02
+  namespace: team1
+spec:
+  host: service2.team1.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -212,6 +284,17 @@ spec:
   - name: grpc
     port: 5001
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: service02
+  namespace: team2
+spec:
+  host: service02.team2.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -282,6 +365,17 @@ spec:
   - name: grpc
     port: 5001
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: service03
+  namespace: team2
+spec:
+  host: service03.team2.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -352,6 +446,17 @@ spec:
   - name: grpc
     port: 5002
     targetPort: 6379
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: connection-security-redis
+  namespace: team3
+spec:
+  host: connection-security-redis.team3.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -422,6 +527,17 @@ spec:
   - name: grpc
     port: 5002
     targetPort: 6379
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: connection-security-redis-headless
+  namespace: team3
+spec:
+  host: connection-security-redis-headless.team3.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -492,6 +608,17 @@ spec:
   - name: grpc
     port: 5003
     targetPort: 8000
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: two-factor
+  namespace: team3
+spec:
+  host: two-factor.team3.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -562,6 +689,17 @@ spec:
   - name: grpc
     port: 5004
     targetPort: 8080
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: hello-kubernetes-07
+  namespace: team4
+spec:
+  host: hello-kubernetes-07.team4.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -632,6 +770,17 @@ spec:
   - name: grpc
     port: 5004
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: hello-kubernetes-08
+  namespace: team4
+spec:
+  host: hello-kubernetes-08.team4.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -702,6 +851,17 @@ spec:
   - name: grpc
     port: 5004
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: service06
+  namespace: team4
+spec:
+  host: service05.team4.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -772,6 +932,17 @@ spec:
   - name: grpc
     port: 5004
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: service09
+  namespace: team4
+spec:
+  host: service09.team4.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -842,6 +1013,17 @@ spec:
   - name: grpc
     port: 5005
     targetPort: 27017
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: db
+  namespace: team5
+spec:
+  host: db.team5.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -912,6 +1094,17 @@ spec:
   - name: grpc
     port: 5005
     targetPort: 5050
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: media-acquisition
+  namespace: team5
+spec:
+  host: media-acquistion.team5.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -982,6 +1175,17 @@ spec:
   - name: grpc
     port: 5007
     targetPort: 8090
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: argo-rollouts-metrics
+  namespace: team7
+spec:
+  host: argo-rollouts-metrics.team7.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -1052,6 +1256,17 @@ spec:
   - name: grpc
     port: 5007
     targetPort: 9252
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: gitlab-runner
+  namespace: team7
+spec:
+  host: gitlab-runner.team7.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -1122,6 +1337,17 @@ spec:
   - name: grpc
     port: 5007
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: testapplication
+  namespace: team7
+spec:
+  host: testapplication.team7.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -1192,6 +1418,17 @@ spec:
   - name: grpc
     port: 5008
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: service03
+  namespace: team8
+spec:
+  host: service03.team8.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
 apiVersion: apps/v1
 kind: Deployment
@@ -1262,4 +1499,15 @@ spec:
   - name: grpc
     port: 5009
     targetPort: 80
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: service09
+  namespace: team9
+spec:
+  host: service09.team9.svc.cluster.local 
+  trafficPolicy:
+    tls:
+      mode: STRICT
 --- ########################################################
