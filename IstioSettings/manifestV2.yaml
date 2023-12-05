@@ -1,0 +1,402 @@
+# no one has moved to new namespaces yet, so ports 
+# are all from the old namespaces, check if this
+# needs to be changed once stuff actually goes
+# live. Kept namespaces in, which dont need to
+# communicate with other groups/dont need to have
+# anything on their namespace
+
+--- #####################################
+#Peer auth for grp 1 ux
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: ux-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Service entry
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: media-acquisition-prod-service-entry
+  namespace: ux-prod
+spec:
+  hosts:
+  - "*.media-acquisition-prod.svc.cluster.local"
+  ports:
+  - number: 27017
+    name: tcp-27017
+    procotol: TCP
+  - number: 30231
+    name: tcp-30231
+    protocol: TCP
+  resolution: DNS
+  - number: 5050
+    name: tcp-5050
+    procotol: TCP
+  resolution: DNS
+  - number: 30952
+    name: tcp-30952
+    procotol: TCP
+  resolution: DNS
+--- #####################################
+#Peer auth for grp 2 web design
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: webdesign-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Service entry ux
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: ux-service-entry-wb
+  namespace: webdesign-prod
+spec:
+  hosts:
+  - "*.ux-prod.svc.cluster.local"
+  ports:
+  - number: 8080
+    name: tcp-8080
+    procotol: TCP
+  resolution: DNS
+---
+#Service entry media-player
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: mediaplayer-service-entry-wb
+  namespace: webdesign-prod
+spec:
+  hosts:
+  - "*.mediaplayer-prod.svc.cluster.local"
+  ports:
+  - number: 8090
+    name: tcp-8090
+    procotol: TCP
+  resolution: DNS
+---
+#Service entry media-aq
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: media-acquisition-service-entry-wb
+  namespace: webdesign-prod
+spec:
+  hosts:
+  - "*.media-acquisition-prod.svc.cluster.local"
+  ports:
+  - number: 27017
+    name: tcp-27017
+    procotol: TCP
+  - number: 30231
+    name: tcp-30231
+    protocol: TCP
+  resolution: DNS
+  - number: 5050
+    name: tcp-5050
+    procotol: TCP
+  resolution: DNS
+  - number: 30952
+    name: tcp-30952
+    procotol: TCP
+  resolution: DNS
+---
+#Service entry data search
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: data-search-service-entry-wb
+  namespace: webdesign-prod
+spec:
+  hosts:
+  - "*.datasearch-prod.svc.cluster.local"
+  ports:
+  - number: 8080
+    name: tcp-8080
+    procotol: TCP
+  - number: 31311
+    name: tcp-31311
+    procotol: TCP
+  resolution: DNS
+---
+#Service entry subscription
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: subscription-service-entry-wb
+  namespace: webdesign-prod
+spec:
+  hosts:
+  - "*.subscription-prod.svc.cluster.local"
+  ports:
+  - number: 80
+    name: tcp-80
+    procotol: TCP
+  resolution: DNS
+--- #####################################
+#Peer auth for grp 3 connection
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: connectionsecurity-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Service entry
+
+# apiVersion: networking.istio.io/v1alpha3
+# kind: ServiceEntry
+# metadata:
+#   name: connectionsecurity-service-entry
+#   namespace: 
+# spec:
+#   hosts:
+#   - "til.svc.cluster.local"
+#   ports:
+#   - number: #tilPort
+#     name: #networkType
+#     procotol: TCP
+#   resolution: DNS
+
+--- #####################################
+#Peer auth for grp 4 data search
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: datasearch-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Service entry
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: media-acquisition-service-entry-ds
+  namespace: datasearch-prod
+spec:
+  hosts:
+  - "*.media-acquisition-prod.svc.cluster.local"
+  ports:
+  - number: 27017
+    name: tcp-27017
+    procotol: TCP
+  - number: 30231
+    name: tcp-30231
+    procotol: TCP
+  resolution: DNS
+  - number: 5050
+    name: tcp-5050
+    procotol: TCP
+  resolution: DNS
+  - number: 30952
+    name: tcp-30952
+    procotol: TCP
+  resolution: DNS
+--- #####################################
+#Peer auth for grp 5 media acquisition
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: mediaacquisition-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Service entry
+
+# apiVersion: networking.istio.io/v1alpha3
+# kind: ServiceEntry
+# metadata:
+#   name: 
+#   namespace: #til
+# spec:
+#   hosts:
+#   - "til.svc.cluster.local"
+#   ports:
+#   - number: #tilPort
+#     name: #networkType
+#     procotol: TCP
+#   resolution: DNS
+
+--- #####################################
+#Peer auth for grp 6 media player
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: mediaplayer-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Service entry
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: media-acquisition-service-entry-mp
+  namespace: mediaplayer-prod
+spec:
+  hosts:
+  - "*.media-acquisition-prod.svc.cluster.local"
+  ports:
+  - number: 27017
+    name: tcp-27017
+    procotol: TCP
+  - number: 30231
+    name: tcp-30231
+    procotol: TCP
+  resolution: DNS
+  - number: 5050
+    name: tcp-5050
+    procotol: TCP
+  resolution: DNS
+  - number: 30952
+    name: tcp-30952
+    procotol: TCP
+  resolution: DNS
+---
+#Service entry
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: ux-service-entry-mp
+  namespace: mediaplayer-prod
+spec:
+  hosts:
+  - "*.ux-prod.svc.cluster.local"
+  ports:
+  - number: 8080
+    name: tcp-8080
+    procotol: TCP
+  resolution: DNS
+--- #####################################
+#Peer auth for grp 7 CI
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: ci-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Service entry
+
+# apiVersion: networking.istio.io/v1alpha3
+# kind: ServiceEntry
+# metadata:
+#   name: #fra
+#   namespace: #til
+# spec:
+#   hosts:
+#   - "til.svc.cluster.local"
+#   ports:
+#   - number: #tilPort
+#     name: #networkType
+#     procotol: TCP
+#   resolution: DNS
+
+--- #####################################
+#Peer auth for grp 8 operations
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: team8
+spec:
+  mtls:
+    mode: STRICT
+---
+#Service entry
+
+# apiVersion: networking.istio.io/v1alpha3
+# kind: ServiceEntry
+# metadata:
+#   name: #fra
+#   namespace: #til
+# spec:
+#   hosts:
+#   - "til.svc.cluster.local"
+#   ports:
+#   - number: #tilPort
+#     name: #networkType
+#     procotol: TCP
+#   resolution: DNS
+
+--- #####################################
+#Peer auth for grp 9 subscription
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: subscription-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Service entry
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: media-acqquisition-service-entry-sub
+  namespace: subscription-prod
+spec:
+  hosts:
+  - "*.media-acquisition-prod.svc.cluster.local"
+  ports:
+  - number: 27017
+    name: tcp-27017
+    procotol: TCP
+  - number: 30231
+    name: tcp-30231
+    procotol: TCP
+  resolution: DNS
+  - number: 5050
+    name: tcp-5050
+    procotol: TCP
+  resolution: DNS
+  - number: 30952
+    name: tcp-30952
+    procotol: TCP
+  resolution: DNS
+---
+#Service entry
+apiVersion: networking.istio.io/v1alpha3
+kind: ServiceEntry
+metadata:
+  name: connection-security-service-entry-mp
+  namespace: subscription-prod
+spec:
+  hosts:
+  - "*.connectionsecurity-prod.svc.cluster.local"
+  ports:
+  - number: 6379
+    name: tcp-6379
+    procotol: TCP
+  resolution: DNS
+  - number: 26379
+    name: tcp-26379
+    procotol: TCP
+  resolution: DNS
+  - number: 8000
+    name: tcp-8000
+    procotol: TCP
+  resolution: DNS
+  - number: 30421
+    name: tcp-30421
+    procotol: TCP
+  resolution: DNS
+--- #####################################
+
