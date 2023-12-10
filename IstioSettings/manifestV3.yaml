@@ -1,0 +1,216 @@
+#messed up V2, here we go again, V2 was apperently for external coms, hashtag read documentation
+#look into rbac with serviceAccount idk
+--- #####################################
+#Peer auth for grp 1 ux
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: ux-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#auth grp 1
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: ux-prod-auth
+  namespace: ux-prod
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["ux-prod"]
+  - to:
+    - operation:
+        namespaces: ["webdesign-prod"]
+    - operation:
+        namespaces: ["mediaplayer-prod"]
+  peers:
+  - mtls:
+      mode: STRICT
+--- #####################################
+#Peer auth for grp 2 web design
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: webdesign-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#auth grp 2
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: webdesign-prod-auth
+  namespace: webdesign-prod
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["webdesign-prod"]
+  peers:
+  - mtls:
+      mode: STRICT
+--- #####################################
+#Peer auth for grp 3 CS
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: connectionsecurity-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#auth grp 3
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: connectionsecurity-prod-auth
+  namespace: connectionsecurity-prod
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["connectionsecurity-prod"]
+  - to:
+    - operation:
+        namespaces: ["subscription-prod"]
+  peers:
+  - mtls:
+      mode: STRICT
+--- #####################################
+#Peer auth for grp 4 DS
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: datasearch-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#auth grp 4
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: datasearch-prod-auth
+  namespace: datasearch-prod
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["datasearch-prod"]
+  - to:
+    - operation:
+        namespaces: ["webdesign-prod"]
+  peers:
+  - mtls:
+      mode: STRICT
+--- #####################################
+#Peer auth for grp 5 Media acquisition
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: media-acquisition
+spec:
+  mtls:
+    mode: STRICT
+---
+#auth grp 5
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: media-acquisition-auth
+  namespace: media-acquisition
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["media-acquisition"]
+  - to:
+    - operation:
+        namespaces: ["ux-prod"]
+  - to:
+    - operation:
+        namespaces: ["datasearch-prod"]
+  - to:
+    - operation:
+        namespaces: ["webdesign-prod"]
+  - to:
+    - operation:
+        namespaces: ["subscription-prod"]
+  - to:
+    - operation:
+        namespaces: ["mediaplayer-prod"]
+  peers:
+  - mtls:
+      mode: STRICT
+--- #####################################
+#Peer auth for grp 6 Media player
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: mediaplayer-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#auth grp 6
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: mediaplayer-prod-auth
+  namespace: mediaplayer-prod
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["mediaplayer-prod"]
+  - to:
+    - operation:
+        namespaces: ["webdesign-prod"]
+  peers:
+  - mtls:
+      mode: STRICT
+--- #####################################
+#Peer auth for grp 9 Sub
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: subscription-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#auth grp 9
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: subscription-prod-auth
+  namespace: subscription-prod
+spec:
+  action: ALLOW
+  rules:
+  - from:
+    - source:
+        namespaces: ["subscription-prod"]
+  - to:
+    - operation:
+        namespaces: ["webdesign-prod"]
+  peers:
+  - mtls:
+      mode: STRICT
