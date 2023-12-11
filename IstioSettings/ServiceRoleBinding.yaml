@@ -1,0 +1,112 @@
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRoleBinding
+metadata:
+  name: ux-prod-service-viewer
+  namespace: default
+spec:
+  subjects:
+  - properties:
+      namespace: "istio-system"
+  - properties:
+      namespace: "webdesign-prod"
+  - properties:
+      namespace: "mediaplayer-prod"
+  roleRef:
+    kind: ServiceRole
+    name: "ux-prod-read"
+---
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRoleBinding
+metadata:
+  name: mediaacquisition-prod-service-viewer
+  namespace: default
+spec:
+  subjects:
+  - properties:
+      namespace: "istio-system"
+  - properties:
+      namespace: "ux-prod"
+  - properties:
+      namespace: "datasearch-prod"
+  - properties:
+      namespace: "subscription-prod"
+  - properties:
+      namespace: "mediaplayer-prod"
+  roleRef:
+    kind: ServiceRole
+    name: "mediaacquisition-prod-read"
+---
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRoleBinding
+metadata:
+  name: datasearch-prod-service-viewer
+  namespace: default
+spec:
+  subjects:
+  - properties:
+      namespace: "istio-system"
+  - properties:
+      namespace: "webdesign-prod"
+  roleRef:
+    kind: ServiceRole
+    name: "datasearch-prod-read"
+---
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRoleBinding
+metadata:
+  name: webdesign-prod-service-viewer
+  namespace: default
+spec:
+  subjects:
+  - properties:
+      namespace: "istio-system"
+  roleRef:
+    kind: ServiceRole
+    name: "webdesign-prod-read"
+---
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRoleBinding
+metadata:
+  name: subscription-prod-service-viewer
+  namespace: default
+spec:
+  subjects:
+  - properties:
+      namespace: "istio-system"
+  - properties:
+      namespace: "ux-prod"
+  - properties:
+      namespace: "webdesign-prod"
+  roleRef:
+    kind: ServiceRole
+    name: "subscription-prod-read"
+---
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRoleBinding
+metadata:
+  name: mediaplayer-prod-service-viewer
+  namespace: default
+spec:
+  subjects:
+  - properties:
+      namespace: "istio-system"
+  - properties:
+      namespace: "webdesign-prod"
+  roleRef:
+    kind: ServiceRole
+    name: "mediaplayer-prod-read"
+---
+apiVersion: "rbac.istio.io/v1alpha1"
+kind: ServiceRoleBinding
+metadata:
+  name: connectionsecurity-prod-service-viewer
+  namespace: default
+spec:
+  subjects:
+  - properties:
+      namespace: "istio-system"
+  - properties:
+      namespace: "subscription-prod"
+  roleRef:
+    kind: ServiceRole
+    name: "connectionsecurity-prod-read"

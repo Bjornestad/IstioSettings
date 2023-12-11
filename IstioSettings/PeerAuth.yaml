@@ -1,0 +1,70 @@
+#Peer auth for grp 1 ux
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: peer-ux
+  namespace: ux-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Peer auth for grp 2 web design
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: peer-webdedesign
+  namespace: webdesign-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Peer auth for grp 3 CS
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: peer-cs
+  namespace: connectionsecurity-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Peer auth for grp 4 DS
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: peer-datasearch
+  namespace: datasearch-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Peer auth for grp 5 Media acquisition
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: peer-media-acq
+  namespace: mediaacquisition-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Peer auth for grp 6 Media player
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: peer-mediaplayer
+  namespace: mediaplayer-prod
+spec:
+  mtls:
+    mode: STRICT
+---
+#Peer auth for grp 9 Sub
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: peer-subscription
+  namespace: subscription-prod
+spec:
+  mtls:
+    mode: STRICT
+---
